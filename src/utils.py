@@ -11,7 +11,7 @@ def get_greeting(date_time: str) -> str:
         return "Добрый день"
     elif 18 <= hour < 23:
         return "Добрый вечер"
-    return
+    return "Доброй ночи"
 
 
 def load_transactions():
