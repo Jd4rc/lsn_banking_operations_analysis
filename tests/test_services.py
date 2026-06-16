@@ -44,3 +44,20 @@ def test_get_top_transactions():
             "description": "Кофе",
         },
     ]
+
+def test_get_top_transactions_returns_only_five_items():
+    operations = [
+        {
+            "Дата операции": f"2026-06-16 1{i}:00:00",
+            "Сумма платежа": -i * 100,
+            "Категория": "Категория",
+            "Описание": f"Операция {i}",
+        }
+        for i in range(1, 8)
+    ]
+
+    result = get_top_transactions(operations)
+
+    assert len(result) == 5
+    assert result[0]["amount"] == -700
+    assert result[-1]["amount"] == -300
