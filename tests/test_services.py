@@ -84,3 +84,19 @@ def test_get_cards_info_single_card():
             'cashback': 15.0
         }
     ]
+
+def test_get_card_info(operations):
+    result = get_cards_info(operations)
+
+    assert result == [
+        {
+            "last_digits": "4052",
+            "total_spent": 1500.0,
+            "cashback": 15.0,
+        },
+        {
+            "last_digits": "7813",
+            "total_spent": 200.0,
+            "cashback": 2.0,
+        },
+    ]
