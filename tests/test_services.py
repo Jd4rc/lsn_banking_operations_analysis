@@ -150,3 +150,20 @@ def test_get_cards_info_with_sum_operations():
         },
     ]
 
+
+def test_get_cards_info_ignore_positive_amounts():
+    operations = [
+        {
+            "Номер карты": "*5678",
+            "Сумма платежа": 1000,
+        },
+        {
+            "Номер карты": "*5678",
+            "Сумма платежа": 500,
+        },
+    ]
+
+    result = get_cards_info(operations)
+
+    assert result == []
+
