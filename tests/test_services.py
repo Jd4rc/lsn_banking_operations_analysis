@@ -181,3 +181,23 @@ def test_get_cards_info_with_missing_card():
 
     assert result == []
 
+
+def test_get_cards_info_with_rounding():
+    operations = [
+        {
+            "Номер карты": "*3456",
+            "Сумма платежа": -1234.567,
+        }
+    ]
+
+    result = get_cards_info(operations)
+
+
+    assert result == [
+        {
+            "last_digits": "3456",
+            "total_spent": 1234.57,
+            "cashback": 12.35,
+        },
+    ]
+
