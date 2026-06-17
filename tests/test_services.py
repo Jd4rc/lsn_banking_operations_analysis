@@ -128,3 +128,25 @@ def test_get_cards_info_with_multiple_cards():
         }
     ]
 
+def test_get_cards_info_with_sum_operations():
+    operations = [
+        {
+            "Номер карты": "*5678",
+            "Сумма платежа": -1000,
+        },
+        {
+            "Номер карты": "*5678",
+            "Сумма платежа": -500,
+        },
+    ]
+
+    result = get_cards_info(operations)
+
+    assert result == [
+        {
+            "last_digits": "5678",
+            "total_spent": 1500.0,
+            "cashback": 15.0,
+        },
+    ]
+
