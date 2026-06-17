@@ -1,4 +1,4 @@
-from src.services import get_top_transactions
+from src.services import get_top_transactions, get_cards_info
 
 def test_get_top_transactions():
     operations = [
@@ -61,3 +61,26 @@ def test_get_top_transactions_returns_only_five_items():
     assert len(result) == 5
     assert result[0]["amount"] == -700
     assert result[-1]["amount"] == -300
+
+
+def test_get_cards_info_single_card():
+    operations = [
+        {
+            "Номер карты": "*4052",
+            "Сумма платежа": -1000,
+        },
+        {
+            "Номер карты": "*4052",
+            "Сумма платежа": -500,
+        },
+    ]
+
+    result = get_cards_info(operations)
+
+    assert result == [
+        {
+            'last_digits': '4052',
+            'total_spent': 1500,
+            'cashback': 15.0
+        }
+    ]
