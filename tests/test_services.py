@@ -167,3 +167,17 @@ def test_get_cards_info_ignore_positive_amounts():
 
     assert result == []
 
+def test_get_cards_info_with_missing_card():
+    operations = [
+        {
+            "Сумма платежа": -1000,
+        },
+        {
+            "Сумма платежа": -500,
+        },
+    ]
+
+    result = get_cards_info(operations)
+
+    assert result == []
+
