@@ -1,6 +1,8 @@
 from datetime import datetime
 import json
 from pathlib import Path
+import pandas as pd
+
 
 
 def get_greeting(date_time: str) -> str:
@@ -20,8 +22,13 @@ def load_user_settings(file_path:Path) -> dict:
         return json.load(file)
 
 
-def load_transactions():
-    ...
+def load_transactions(file_path:Path) -> pd.DataFrame:
+    if not file_path.exists():
+        raise FileNotFoundError(
+            f'Файл не найден {file_path}'
+        )
+    return pd.read_excel(file_path)
+
 
 def format_date():
     ...
