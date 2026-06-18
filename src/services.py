@@ -4,18 +4,10 @@ from pathlib import Path
 
 import requests
 from dotenv import load_dotenv
-from src.utils import load_user_settings
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SETTING_PATH = BASE_DIR / 'user_setting.json'
 
 load_dotenv(BASE_DIR / '.env')
-
-settings = load_user_settings(SETTING_PATH)
-
-currencies = settings.get('user_currencies', [])
-stocks = settings.get('user_stocks', [])
-
 
 def get_cards_info(
         operations: list[dict],
