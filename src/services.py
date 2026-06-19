@@ -1,5 +1,3 @@
-import json
-from pathlib import Path
 import pandas as pd
 import requests
 from src.config import EXCHANGE_RATES_API_KEY, ALPHA_VANTAGE_API_KEY
@@ -142,5 +140,4 @@ def get_stock_prices(
                 'price': round(float(price), 2)
             }
         )
-
     return stock_prices
