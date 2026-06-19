@@ -1,10 +1,25 @@
+from src.config import BASE_DIR
+from src.config import DATA_DIR
+from src.config import SETTING_PATH
+from src.config import OPERATIONS_PATH
 from src.utils import get_greeting
+from src.services import get_cards_info
+from src.services import get_top_transactions
+from src.services import get_currency_rates
+from src.utils import load_user_settings
+from src.utils import load_transactions
 
 def main(date_time: str) -> dict:
+    settings = load_user_settings(SETTING_PATH)
+
+    currencies = settings.get('user_currencies', [])
+
+    operations = load_transactions(OPERATIONS_PATH)
+
     return {
         "greeting": get_greeting(date_time),
-        "cards": [],
-        "top_transactions": [],
-        "currency_rates": [],
+        "cards": get_cards_info(operations),
+        "top_transactions": get_top_transactions(operations),
+        "currency_rates": get_currency_rates(currencies),
         "stock_prices": [],
     }
