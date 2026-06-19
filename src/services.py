@@ -1,16 +1,12 @@
-import os
 import json
 from pathlib import Path
-
+import pandas as pd
 import requests
-from dotenv import load_dotenv
+from src.config import API_KEY
 
-
-
-load_dotenv(BASE_DIR / '.env')
 
 def get_cards_info(
-        operations: list[dict],
+        operations: pd.DataFrame,
 
 ) -> list[dict]:
     cards: dict[str, float] = {}
@@ -40,7 +36,7 @@ def get_cards_info(
         for last_digits, total_spent in cards.items()
     ]
 
-def get_top_transactions(operations: list[dict]) -> list[dict]:
+def get_top_transactions(operations: pd.DataFrame) -> list[dict]:
     sorted_operations = sorted(
         operations,
         key=lambda operation: abs(operation['Сумма платежа']),
@@ -66,9 +62,13 @@ def get_currency_rates(currencies: list[str]) -> list[dict]:
     # 4. собрать список словарей
     # 5. вернуть результат
 
-    api_key = os.getenv('API_KEY')
 
     currency_rates = []
+
+    if API_KEY is None:
+        raise ValueError(
+            'API_KEY not found'
+        )
 
     for currency in currencies:
         url = "https://api.apilayer.com/exchangerates_data/convert"
@@ -80,7 +80,7 @@ def get_currency_rates(currencies: list[str]) -> list[dict]:
         }
 
         headers = {
-            "apikey": api_key,
+            "apikey": API_KEY,
         }
 
         try:
