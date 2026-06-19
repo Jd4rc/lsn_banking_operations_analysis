@@ -12,6 +12,8 @@ OPERATIONS_PATH = DATA_DIR / 'user_operations.xlsx'
 
 load_dotenv(BASE_DIR / '.env')
 
-API_KEY = os.getenv('API_KEY')
+EXCHANGE_RATES_API_KEY = os.getenv('EXCHANGE_RATES_API_KEY')
+
+ALPHA_VANTAGE_API_KEY = os.getenv("ALPHA_VANTAGE_API_KEY")
 
 
