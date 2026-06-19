@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 import pandas as pd
 import requests
-from src.config import API_KEY
+from src.config import EXCHANGE_RATES_API_KEY, ALPHA_VANTAGE_API_KEY
 
 
 def get_cards_info(
@@ -65,7 +65,7 @@ def get_currency_rates(currencies: list[str]) -> list[dict]:
 
     currency_rates = []
 
-    if API_KEY is None:
+    if EXCHANGE_RATES_API_KEY is None:
         raise ValueError(
             'API_KEY not found'
         )
@@ -80,7 +80,7 @@ def get_currency_rates(currencies: list[str]) -> list[dict]:
         }
 
         headers = {
-            "apikey": API_KEY,
+            "apikey": EXCHANGE_RATES_API_KEY,
         }
 
         try:
@@ -110,17 +110,36 @@ def get_currency_rates(currencies: list[str]) -> list[dict]:
 def get_stock_prices(
         stocks: list[str]
 ) -> list[dict]:
-    result = []
+    stock_prices = []
 
     for stock in stocks:
         # Запрос к api
-        ...
+        url = 'https://www.alphavantage.co/query'
 
-    result.append(
-        {
-            'stock': stock,
-            'price': price
+        params = {
+            'function': 'GLOBAL_QUOTE',
+            'symbol': stock,
+            'apikey': ALPHA_VANTAGE_API_KEY,
         }
-    )
 
-    return result
+        try:
+            response = requests.get(url, params=params, timeout = 10)
+            response.raise_for_status()
+            data = response.json()
+        except requests.RequestException:
+            continue
+
+        quote = data.get('Global Quote', {})
+        price = quote.get('05. price')
+
+        if price is None:
+            continue
+
+        stock_prices.append(
+            {
+                'stock': quote,
+                'price': round(float(price), 2)
+            }
+        )
+
+    return stock_prices
