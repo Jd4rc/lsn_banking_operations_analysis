@@ -130,6 +130,7 @@ def get_stock_prices(
             continue
 
         quote = data.get('Global Quote', {})
+        name = quote.get( "01. symbol")
         price = quote.get('05. price')
 
         if price is None:
@@ -137,7 +138,7 @@ def get_stock_prices(
 
         stock_prices.append(
             {
-                'stock': quote,
+                'stock': name,
                 'price': round(float(price), 2)
             }
         )
