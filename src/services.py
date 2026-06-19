@@ -107,5 +107,20 @@ def get_currency_rates(currencies: list[str]) -> list[dict]:
 
     return currency_rates
 
-def get_stock_prices():
-    ...
+def get_stock_prices(
+        stocks: list[str]
+) -> list[dict]:
+    result = []
+
+    for stock in stocks:
+        # Запрос к api
+        ...
+
+    result.append(
+        {
+            'stock': stock,
+            'price': price
+        }
+    )
+
+    return result
