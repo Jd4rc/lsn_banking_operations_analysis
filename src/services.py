@@ -9,11 +9,12 @@ def get_cards_info(
 ) -> list[dict]:
     cards: dict[str, float] = {}
 
-    for operation in operations:
-        card_number = operation.get('Номер карты')
-        amount = operation.get('Сумма платежа', 0)
 
-        if not card_number:
+    for _, operation in operations.iterrows():
+        card_number = operation['Номер карты']
+        amount = operation['Сумма платежа']
+
+        if pd.isna(card_number):
             continue
 
         if amount >= 0:
@@ -24,42 +25,39 @@ def get_cards_info(
 
         cards[last_digits] = cards.get(last_digits, 0) + abs(amount)
 
-
     return [
         {
             'last_digits': last_digits,
             'total_spent': round(total_spent, 2),
-            'cashback': round(total_spent/100, 2)
+            'cashback': round(total_spent / 100, 2)
         }
         for last_digits, total_spent in cards.items()
     ]
 
-def get_top_transactions(operations: pd.DataFrame) -> list[dict]:
-    sorted_operations = sorted(
-        operations,
-        key=lambda operation: abs(operation['Сумма платежа']),
-        reverse=True
-    )
 
-    top_operations = sorted_operations[:5]
+def get_top_transactions(operations: pd.DataFrame) -> list[dict]:
+    top_operations = (
+        operations
+        .assign(abs_amount=operations['Сумма платежа'].abs())
+        .sort_values(by='abs_amount', ascending=False)
+        .head(5)
+    )
 
     return [
         {
             "date": operation['Дата операции'],
             "amount": operation['Сумма платежа'],
             "category": operation['Категория'],
-            "description": operation['Описание']
+            "description": operation['Описание'],
         }
-        for operation in top_operations
+        for _, operation in top_operations.iterrows()
     ]
-
 
 
 def get_currency_rates(currencies: list[str]) -> list[dict]:
     # 3. для каждой валюты сделать запрос к API
     # 4. собрать список словарей
     # 5. вернуть результат
-
 
     currency_rates = []
 
@@ -82,7 +80,7 @@ def get_currency_rates(currencies: list[str]) -> list[dict]:
         }
 
         try:
-            response = requests.get(url, params=params, headers=headers, timeout = 10)
+            response = requests.get(url, params=params, headers=headers, timeout=10)
 
             response.raise_for_status()
 
@@ -95,7 +93,6 @@ def get_currency_rates(currencies: list[str]) -> list[dict]:
         if rate is None:
             continue
 
-
         currency_rates.append(
             {
                 'currency': currency,
@@ -104,6 +101,7 @@ def get_currency_rates(currencies: list[str]) -> list[dict]:
         )
 
     return currency_rates
+
 
 def get_stock_prices(
         stocks: list[str]
@@ -121,14 +119,14 @@ def get_stock_prices(
         }
 
         try:
-            response = requests.get(url, params=params, timeout = 10)
+            response = requests.get(url, params=params, timeout=10)
             response.raise_for_status()
             data = response.json()
         except requests.RequestException:
             continue
 
         quote = data.get('Global Quote', {})
-        name = quote.get( "01. symbol")
+        name = quote.get("01. symbol")
         price = quote.get('05. price')
 
         if price is None:
