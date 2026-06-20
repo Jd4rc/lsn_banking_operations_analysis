@@ -1,5 +1,3 @@
-from src.config import BASE_DIR
-from src.config import DATA_DIR
 from src.config import SETTING_PATH
 from src.config import OPERATIONS_PATH
 from src.utils import get_greeting
