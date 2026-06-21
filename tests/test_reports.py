@@ -150,3 +150,25 @@ def test_spending_by_category_returns_only_negative_amounts():
                                   date='2021-05-16',)
 
     assert len(result) == 0
+
+def test_spending_by_category_returns_empty_dataframe_if_category_not_found():
+    transactions = pd.DataFrame(
+        [
+            {
+                'Дата платежа': '2021-05-15',
+                'Категория': 'Супермаркеты',
+                'Сумма платежа': -800
+            },
+            {
+                'Дата платежа': '2021-05-15',
+                'Категория': 'Кафе',
+                'Сумма платежа': 1500
+            }
+        ]
+    )
+
+    result = spending_by_category(transactions,
+                                  category='Аптека',
+                                  date='2021-05-16',)
+
+    assert result.empty
