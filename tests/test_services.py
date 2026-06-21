@@ -377,3 +377,12 @@ def test_get_stock_prices_if_price_is_none(mock_get):
     result = get_stock_prices(['AAPL'])
 
     assert result == []
+
+@patch('src.services.ALPHA_VANTAGE_API_KEY', 'test_api_key')
+@patch('src.services.requests.get')
+def test_get_stock_prices_skip_request_error(mock_get):
+    mock_get.side_effect = requests.RequestException()
+
+    result = get_stock_prices(['AAPL'])
+
+    assert result == []
