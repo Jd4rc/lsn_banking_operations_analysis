@@ -1,5 +1,6 @@
 import json
 import pandas as pd
+import os
 
 from src.reports import report_to_file
 
@@ -42,3 +43,23 @@ def test_report_to_file_with_text_result(tmp_path):
     assert file_path.exists()
     assert result == 'Hello report'
     assert file_path.read_text(encoding='UTF-8') == 'Hello report'
+
+def test_report_to_file_default_filename(tmp_path):
+    old_cwd = os.getcwd()
+    os.chdir(tmp_path)
+
+    try:
+        @report_to_file()
+        def test_func():
+            return 'default filename result'
+
+        result = test_func()
+
+        files = list(tmp_path.glob('test_func_*.json'))
+
+        assert result == 'default filename result'
+        assert len(files) == 1
+        assert files[0].read_text(encoding='UTF-8') == 'default filename result'
+
+    finally:
+        os.chdir(old_cwd)
