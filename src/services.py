@@ -1,6 +1,7 @@
 import pandas as pd
 import requests
 from src.config import EXCHANGE_RATES_API_KEY, ALPHA_VANTAGE_API_KEY
+from src.services_2nd_task import logger
 
 
 def get_cards_info(
@@ -132,7 +133,12 @@ def get_currency_rates(currencies: list[str]) -> list[dict]:
             response.raise_for_status()
 
             data = response.json()
-        except requests.RequestException:
+        except requests.RequestException as e:
+            logger.warning(
+                f'Ошибка при получении курса %s: %s',
+                currency,
+                e
+            )
             continue
 
         rate = data['result']
