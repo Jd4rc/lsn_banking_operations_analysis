@@ -35,6 +35,24 @@ def get_cards_info(
 
 
 def get_top_transactions(operations: pd.DataFrame) -> list[dict]:
+    """
+        Возвращает топ-5 транзакций по сумме платежа.
+
+        Транзакции сортируются по модулю суммы платежа
+        в порядке убывания. В результат включаются дата,
+        сумма, категория и описание операции.
+
+        :param operations: DataFrame с банковскими операциями.
+        :return: Список словарей вида:
+            [
+                {
+                    "date": "2021-12-08",
+                    "amount": -564.0,
+                    "category": "Супермаркеты",
+                    "description": "Покупка в магазине"
+                }
+            ]
+        """
     top_operations = (
         operations
         .assign(abs_amount=operations['Сумма платежа'].abs())
