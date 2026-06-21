@@ -7,6 +7,24 @@ def get_cards_info(
         operations: pd.DataFrame,
 
 ) -> list[dict]:
+    """
+       Формирует информацию по банковским картам.
+
+       Для каждой карты рассчитывается общая сумма расходов
+       и размер кешбэка. Учитываются только операции с
+       отрицательной суммой платежа. Карты без номера
+       пропускаются.
+
+       :param operations: DataFrame с банковскими операциями.
+       :return: Список словарей вида:
+           [
+               {
+                   "last_digits": "5814",
+                   "total_spent": 1262.0,
+                   "cashback": 12.62
+               }
+           ]
+       """
     cards: dict[str, float] = {}
 
     for _, operation in operations.iterrows():
