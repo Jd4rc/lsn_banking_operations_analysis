@@ -26,6 +26,12 @@ def get_cards_info(
                }
            ]
        """
+    if "Номер карты" not in operations.columns:
+        return []
+
+    if "Сумма платежа" not in operations.columns:
+        return []
+
     cards: dict[str, float] = {}
 
     for _, operation in operations.iterrows():
