@@ -361,3 +361,19 @@ def test_get_stock_prices_with_multiple_stocks(mock_get):
         }
     ]
 
+
+@patch('src.services.ALPHA_VANTAGE_API_KEY', 'test_api_key')
+@patch('src.services.requests.get')
+def test_get_stock_prices_if_price_is_none(mock_get):
+    mock_response = mock_get.return_value
+    mock_response.json.return_value = {
+        "Global Quote": {
+            "01. symbol": "AAPL",
+            "05. price": None,
+        }
+    }
+    mock_response.raise_for_status.return_value = None
+
+    result = get_stock_prices(['AAPL'])
+
+    assert result == []
