@@ -3,7 +3,7 @@ from unittest.mock import patch, Mock
 import pytest
 import requests
 
-from src.services import get_top_transactions, get_cards_info, get_currency_rates
+from src.services import get_top_transactions, get_cards_info, get_currency_rates, get_stock_prices
 
 def test_get_top_transactions():
     operations = [
@@ -293,7 +293,33 @@ def test_get_currency_rates_without_api_key():
         get_currency_rates(['USD'])
 
 
+@patch('src.services.ALPHA_VANTAGE_API_KEY', 'test_api_key')
+@patch('src.services.requests.get')
+def test_get_stock_prices(mock_get):
+    mock_response = mock_get.return_value
+    mock_response.json.return_value = {
+        "Global Quote": {
+            "01. symbol": "AAPL",
+            "05. price": "213.4567",
+        }
+    }
+    mock_response.raise_for_status.return_value = None
 
+    result = get_stock_prices(['AAPL'])
 
+    assert result == [
+        {
+            'stock': 'AAPL',
+            'price': 213.46
+        }
+    ]
 
-
+    mock_get.assert_called_once_with(
+        'https://www.alphavantage.co/query',
+        params={
+            'function': 'GLOBAL_QUOTE',
+            'symbol': 'AAPL',
+            'apikey': 'test_api_key',
+        },
+        timeout=10
+    )
