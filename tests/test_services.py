@@ -1,5 +1,7 @@
 from unittest.mock import patch, Mock
 
+import requests
+
 from src.services import get_top_transactions, get_cards_info, get_currency_rates
 
 def test_get_top_transactions():
@@ -274,6 +276,15 @@ def test_get_currency_rates_skip_none_rate(mock_get):
     result = get_currency_rates(['USD'])
 
     assert result == []
+
+
+@patch('src.services.EXCHANGE_RATES_API_KEY', 'test_api_key')
+@patch('src.services.requests.get', side_effect=requests.RequestException())
+def test_get_currency_rates_skip_request_error(mock_get):
+    result = get_currency_rates(['USD'])
+
+    assert result == []
+
 
 
 
