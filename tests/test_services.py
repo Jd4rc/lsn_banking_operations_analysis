@@ -112,16 +112,18 @@ def test_get_card_info(operations):
     ]
 
 def test_get_cards_info_with_multiple_cards():
-    operations = [
-        {
-            "Номер карты": "*5678",
-            "Сумма платежа": -1500
-        },
-        {
-            "Номер карты": "*9178",
-            "Сумма платежа": -98
-        }
-    ]
+    operations = pd.DataFrame(
+        [
+            {
+                "Номер карты": "*5678",
+                "Сумма платежа": -1500
+            },
+            {
+                "Номер карты": "*9178",
+                "Сумма платежа": -98
+            }
+        ]
+    )
 
     result = get_cards_info(operations)
 
@@ -139,16 +141,18 @@ def test_get_cards_info_with_multiple_cards():
     ]
 
 def test_get_cards_info_with_sum_operations():
-    operations = [
-        {
-            "Номер карты": "*5678",
-            "Сумма платежа": -1000,
-        },
-        {
-            "Номер карты": "*5678",
-            "Сумма платежа": -500,
-        },
-    ]
+    operations = pd.DataFrame(
+        [
+            {
+                "Номер карты": "*5678",
+                "Сумма платежа": -1000,
+            },
+            {
+                "Номер карты": "*5678",
+                "Сумма платежа": -500,
+            },
+        ]
+    )
 
     result = get_cards_info(operations)
 
@@ -162,30 +166,34 @@ def test_get_cards_info_with_sum_operations():
 
 
 def test_get_cards_info_ignore_positive_amounts():
-    operations = [
-        {
-            "Номер карты": "*5678",
-            "Сумма платежа": 1000,
-        },
-        {
-            "Номер карты": "*5678",
-            "Сумма платежа": 500,
-        },
-    ]
+    operations = pd.DataFrame(
+        [
+            {
+                "Номер карты": "*5678",
+                "Сумма платежа": 1000,
+            },
+            {
+                "Номер карты": "*5678",
+                "Сумма платежа": 500,
+            },
+        ]
+    )
 
     result = get_cards_info(operations)
 
     assert result == []
 
 def test_get_cards_info_with_missing_card():
-    operations = [
-        {
-            "Сумма платежа": -1000,
-        },
-        {
-            "Сумма платежа": -500,
-        },
-    ]
+    operations = pd.DataFrame(
+        [
+            {
+                "Сумма платежа": -1000,
+            },
+            {
+                "Сумма платежа": -500,
+            },
+        ]
+    )
 
     result = get_cards_info(operations)
 
@@ -193,12 +201,14 @@ def test_get_cards_info_with_missing_card():
 
 
 def test_get_cards_info_with_rounding():
-    operations = [
-        {
-            "Номер карты": "*3456",
-            "Сумма платежа": -1234.567,
-        }
-    ]
+    operations = pd.DataFrame(
+        [
+            {
+                "Номер карты": "*3456",
+                "Сумма платежа": -1234.567,
+            }
+        ]
+    )
 
     result = get_cards_info(operations)
 
