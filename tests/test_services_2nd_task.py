@@ -30,3 +30,16 @@ def test_profitable_cashback_categories():
         'Супермаркеты': 17.0,
         'Кафе': 10.0
     }
+
+def test_profitable_cashback_categories_other_month():
+    data = pd.DataFrame(
+       [ {
+            'Дата платежа': '2021-08-01',
+            'Категория': 'Супермаркеты',
+            'Сумма платежа': -900
+        }]
+    )
+
+    result = profitable_cashback_categories(data, 2021, 12)
+
+    assert json.loads(result) == {}
