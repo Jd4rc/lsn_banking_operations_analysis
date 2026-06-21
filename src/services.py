@@ -1,7 +1,7 @@
 import pandas as pd
 import requests
 from src.config import EXCHANGE_RATES_API_KEY, ALPHA_VANTAGE_API_KEY
-from src.services_2nd_task import logger
+from src.cashback import logger
 
 
 def get_cards_info(

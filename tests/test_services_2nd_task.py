@@ -1,7 +1,7 @@
 import json
 import pandas as pd
 
-from src.services_2nd_task import profitable_cashback_categories
+from src.cashback import profitable_cashback_categories
 
 def test_profitable_cashback_categories():
     data = pd.DataFrame(
