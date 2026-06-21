@@ -28,7 +28,3 @@ def load_transactions(file_path:Path) -> pd.DataFrame:
             f'Файл не найден {file_path}'
         )
     return pd.read_excel(file_path)
-
-
-def format_date():
-    ...
