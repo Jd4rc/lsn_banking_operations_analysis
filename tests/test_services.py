@@ -74,7 +74,7 @@ def test_get_top_transactions_returns_only_five_items():
 
 
 def test_get_cards_info_single_card():
-    operations = [
+    operations = pd.DataFrame([
         {
             "Номер карты": "*4052",
             "Сумма платежа": -1000,
@@ -83,7 +83,7 @@ def test_get_cards_info_single_card():
             "Номер карты": "*4052",
             "Сумма платежа": -500,
         },
-    ]
+    ])
 
     result = get_cards_info(operations)
 
