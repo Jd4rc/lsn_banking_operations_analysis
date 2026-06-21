@@ -91,3 +91,39 @@ def test_spending_by_category_return_only_selected_category():
 
     assert len(result) == 1
     assert result.iloc[0]['Категория'] == 'Кафе'
+
+def test_spending_by_category_return_only_last_three_months():
+    transactions = pd.DataFrame(
+        [
+            {
+                'Дата платежа': '2021-01-15',
+                'Категория': 'Супермаркеты',
+                'Сумма платежа': -800
+            },
+            {
+                'Дата платежа': '2021-03-15',
+                'Категория': 'Супермаркеты',
+                'Сумма платежа': -1500
+            },
+            {
+                'Дата платежа': '2021-07-15',
+                'Категория': 'Супермаркеты',
+                'Сумма платежа': -1500
+            },
+            {
+                'Дата платежа': '2021-09-15',
+                'Категория': 'Супермаркеты',
+                'Сумма платежа': -1500
+            },
+
+        ]
+    )
+
+    result = spending_by_category(
+        transactions,
+        category='Супермаркеты',
+        date='2021-09-16',
+    )
+
+    assert len(result) == 2
+    assert result['Сумма платежа'].to_list() == [-1500, -1500]
