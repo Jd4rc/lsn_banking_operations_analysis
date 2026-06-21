@@ -1,4 +1,6 @@
-from src.services import get_top_transactions, get_cards_info
+from unittest.mock import patch
+
+from src.services import get_top_transactions, get_cards_info, get_currency_rates
 
 def test_get_top_transactions():
     operations = [
@@ -200,4 +202,31 @@ def test_get_cards_info_with_rounding():
             "cashback": 12.35,
         },
     ]
+@patch('src.services.EXCHANGE_RATES_API_KEY', 'test_api_key')
+@patch('src.services.requests.get')
+def test_get_currency_rates_success(mock_get):
+
+    mock_response = mock_get.return_value
+    mock_response.json.return_value = {
+        'result': 91.2345
+    }
+    mock_response.raise_for_status.return_value = None
+
+    result = get_currency_rates(['USD'])
+
+    assert result == [{'currency': 'USD', 'rate': 91.23}]
+
+    mock_get.assert_called_once_with(
+        "https://api.apilayer.com/exchangerates_data/convert",
+        params={
+            'from': 'USD',
+            'to': 'RUB',
+            'amount': 1,
+        },
+        headers={
+            "apikey": 'test_api_key',
+        },
+        timeout=10
+    )
+
 
