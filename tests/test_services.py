@@ -1,4 +1,4 @@
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 
 from src.services import get_top_transactions, get_cards_info, get_currency_rates
 
@@ -228,5 +228,35 @@ def test_get_currency_rates_success(mock_get):
         },
         timeout=10
     )
+
+@patch('src.services.EXCHANGE_RATES_API_KEY', 'test_api_key')
+@patch('src.services.requests.get')
+def test_get_currency_rates_multiple_currencies(mock_get):
+
+    mock_response_usd = Mock()
+    mock_response_usd.json.return_value = {
+        'result': 91.2345
+    }
+    mock_response_usd.raise_for_status.return_value = None
+
+    mock_response_eur = Mock()
+    mock_response_eur.json.return_value = {
+        'result': 87.8270
+    }
+    mock_response_eur.raise_for_status.return_value = None
+
+    mock_get.side_effect = [
+        mock_response_usd,
+        mock_response_eur,
+    ]
+
+    result = get_currency_rates(['USD', 'EUR'])
+
+    assert result == [
+        {'currency': 'USD', 'rate': 91.23},
+        {'currency': 'EUR', 'rate': 87.83},
+    ]
+
+
 
 
