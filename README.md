@@ -81,6 +81,9 @@
 ## Структура проекта
 
 ```text
+## Структура проекта
+
+```text
 lsn_banking_operations_analysis/
 │
 ├── data/
@@ -88,24 +91,34 @@ lsn_banking_operations_analysis/
 │   └── user_settings.json
 │
 ├── src/
-│   ├── config.py
-│   ├── main.py
-│   ├── views.py
-│   ├── services.py
-│   ├── services_2nd_task.py
-│   ├── reports.py
-│   └── utils.py
+│   ├── __init__.py
+│   ├── cashback.py          # Сервис выгодных категорий кешбэка
+│   ├── config.py            # Конфигурация проекта и пути к файлам
+│   ├── main.py              # Точка входа приложения
+│   ├── reports.py           # Отчеты и декоратор сохранения результатов
+│   ├── services.py          # Сервисы главной страницы
+│   ├── utils.py             # Вспомогательные функции
+│   └── views.py             # Формирование данных веб-страниц
 │
 ├── tests/
+│   ├── __init__.py
 │   ├── conftest.py
-│   ├── test_views.py
-│   ├── test_services.py
+│   ├── test_cashback.py
 │   ├── test_reports.py
-│   └── test_utils.py
+│   ├── test_services.py
+│   ├── test_utils.py
+│   └── test_views.py
 │
+├── .env
 ├── .env_template
+├── .flake8
+├── .gitignore
+├── LICENSE
+├── poetry.lock
 ├── pyproject.toml
 └── README.md
+```
+
 ```
 
 ## Используемые технологии
