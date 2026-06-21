@@ -35,6 +35,9 @@ def get_cards_info(
         if pd.isna(card_number):
             continue
 
+        if str(card_number).strip() == "":
+            continue
+
         if amount >= 0:
             continue
 
