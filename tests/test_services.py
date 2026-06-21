@@ -257,6 +257,24 @@ def test_get_currency_rates_multiple_currencies(mock_get):
         {'currency': 'EUR', 'rate': 87.83},
     ]
 
+@patch('src.services.EXCHANGE_RATES_API_KEY', 'test_api_key')
+@patch('src.services.requests.get')
+def test_get_currency_rates_skip_none_rate(mock_get):
+
+    mock_response_usd = Mock()
+    mock_response_usd.json.return_value = {
+        'result': None
+    }
+    mock_response_usd.raise_for_status.return_value = None
+
+    mock_get.side_effect = [
+        mock_response_usd,
+    ]
+
+    result = get_currency_rates(['USD'])
+
+    assert result == []
+
 
 
 
