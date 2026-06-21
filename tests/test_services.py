@@ -323,3 +323,41 @@ def test_get_stock_prices(mock_get):
         },
         timeout=10
     )
+
+
+@patch('src.services.ALPHA_VANTAGE_API_KEY', 'test_api_key')
+@patch('src.services.requests.get')
+def test_get_stock_prices_with_multiple_stocks(mock_get):
+    mock_response_aapl = Mock()
+    mock_response_aapl.json.return_value = {
+        "Global Quote": {
+            "01. symbol": "AAPL",
+            "05. price": "213.4567",
+        }
+    }
+    mock_response_aapl.raise_for_status.return_value = None
+
+    mock_response_msft = Mock()
+    mock_response_msft.json.return_value = {
+        "Global Quote": {
+            "01. symbol": "MSFT",
+            "05. price": "512.999",
+        }
+    }
+    mock_response_msft.raise_for_status.return_value = None
+
+    mock_get.side_effect = [mock_response_aapl, mock_response_msft]
+
+    result = get_stock_prices(['AAPL',  'MSFT'])
+
+    assert result == [
+        {
+            'stock': 'AAPL',
+            'price': 213.46
+        },
+        {
+            'stock': 'MSFT',
+            'price': 513.0
+        }
+    ]
+
