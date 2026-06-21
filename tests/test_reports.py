@@ -172,3 +172,41 @@ def test_spending_by_category_returns_empty_dataframe_if_category_not_found():
                                   date='2021-05-16',)
 
     assert result.empty
+
+
+def test_spending_by_category_does_not_change_original_dataframe():
+    transactions = pd.DataFrame(
+        [
+            {
+                'Дата платежа': '2021-01-15',
+                'Категория': 'Супермаркеты',
+                'Сумма платежа': -800
+            },
+            {
+                'Дата платежа': '2021-03-15',
+                'Категория': 'Супермаркеты',
+                'Сумма платежа': -1500
+            },
+            {
+                'Дата платежа': '2021-07-15',
+                'Категория': 'Супермаркеты',
+                'Сумма платежа': -1500
+            },
+            {
+                'Дата платежа': '2021-09-15',
+                'Категория': 'Супермаркеты',
+                'Сумма платежа': -1500
+            },
+
+        ]
+    )
+
+    original = transactions.copy()
+
+    spending_by_category(
+        transactions,
+        category='Супермаркеты',
+        date='2021-09-16',
+    )
+
+    pd.testing.assert_frame_equal(transactions,original)
