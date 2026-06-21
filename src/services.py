@@ -81,7 +81,7 @@ def get_top_transactions(operations: pd.DataFrame) -> list[dict]:
 
     return [
         {
-            "date": operation['Дата операции'].strftime("%Y-%m-%d"),
+            "date": pd.to_datetime(operation['Дата операции']).strftime("%d-%m-%Y"),
             "amount": operation['Сумма платежа'],
             "category": operation['Категория'],
             "description": operation['Описание'],
