@@ -43,3 +43,17 @@ def test_profitable_cashback_categories_other_month():
     result = profitable_cashback_categories(data, 2021, 12)
 
     assert json.loads(result) == {}
+
+def test_profitable_cashback_categories_skip_income():
+    data = pd.DataFrame(
+       [ {
+            'Дата платежа': '2021-12-01',
+            'Категория': 'Супермаркеты',
+            'Сумма платежа': 900
+        }]
+    )
+
+    result = profitable_cashback_categories(data, 2021, 12)
+
+    assert json.loads(result) == {}
+
