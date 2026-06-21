@@ -9,7 +9,6 @@ def get_cards_info(
 ) -> list[dict]:
     cards: dict[str, float] = {}
 
-
     for _, operation in operations.iterrows():
         card_number = operation['Номер карты']
         amount = operation['Сумма платежа']
@@ -55,10 +54,23 @@ def get_top_transactions(operations: pd.DataFrame) -> list[dict]:
 
 
 def get_currency_rates(currencies: list[str]) -> list[dict]:
-    # 3. для каждой валюты сделать запрос к API
-    # 4. собрать список словарей
-    # 5. вернуть результат
+    """
+        Получает курсы валют по отношению к российскому рублю.
 
+        Для каждой валюты выполняется запрос к API Exchange Rates Data.
+        Если запрос завершается ошибкой или курс отсутствует,
+        такая валюта пропускается.
+
+        :param currencies: Список кодов валют (например, USD, EUR).
+        :return: Список словарей вида:
+            [
+                {
+                    "currency": "USD",
+                    "rate": 78.45
+                }
+            ]
+        :raises ValueError: Если не найден API-ключ.
+        """
     currency_rates = []
 
     if EXCHANGE_RATES_API_KEY is None:
