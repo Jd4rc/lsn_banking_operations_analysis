@@ -80,14 +80,13 @@ def get_top_transactions(operations: pd.DataFrame) -> list[dict]:
 
     return [
         {
-            "date": operation['Дата операции'],
+            "date": operation['Дата операции'].strftime("%Y-%m-%d"),
             "amount": operation['Сумма платежа'],
             "category": operation['Категория'],
             "description": operation['Описание'],
         }
         for _, operation in top_operations.iterrows()
     ]
-
 
 def get_currency_rates(currencies: list[str]) -> list[dict]:
     """
