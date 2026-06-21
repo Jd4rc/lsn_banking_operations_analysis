@@ -106,6 +106,16 @@ def get_currency_rates(currencies: list[str]) -> list[dict]:
 def get_stock_prices(
         stocks: list[str]
 ) -> list[dict]:
+    """
+        Получает текущую стоимость акций по указанным тикерам.
+
+        Для каждого тикера выполняется запрос к API Alpha Vantage.
+        В случае успешного ответа возвращается список словарей
+        с названием акции и ее текущей стоимостью.
+
+        :param stocks: Список тикеров акций.
+        :return: Список словарей с информацией об акциях.
+        """
     stock_prices = []
 
     for stock in stocks:
