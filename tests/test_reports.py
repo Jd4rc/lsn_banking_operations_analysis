@@ -127,3 +127,26 @@ def test_spending_by_category_return_only_last_three_months():
 
     assert len(result) == 2
     assert result['Сумма платежа'].to_list() == [-1500, -1500]
+
+
+def test_spending_by_category_returns_only_negative_amounts():
+    transactions = pd.DataFrame(
+        [
+            {
+                'Дата платежа': '2021-05-15',
+                'Категория': 'Супермаркеты',
+                'Сумма платежа': -800
+            },
+            {
+                'Дата платежа': '2021-05-15',
+                'Категория': 'Кафе',
+                'Сумма платежа': 1500
+            }
+        ]
+    )
+
+    result = spending_by_category(transactions,
+                                  category='Кафе',
+                                  date='2021-05-16',)
+
+    assert len(result) == 0
