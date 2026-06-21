@@ -3,6 +3,8 @@ import pandas as pd
 import os
 
 from src.reports import report_to_file
+from src.reports import spending_by_category
+
 
 def test_report_to_file_with_dataframe(tmp_path):
     file_path = tmp_path / 'report.json'
@@ -63,3 +65,29 @@ def test_report_to_file_default_filename(tmp_path):
 
     finally:
         os.chdir(old_cwd)
+
+
+def test_spending_by_category_return_only_selected_category():
+    transactions = pd.DataFrame(
+        [
+            {
+                'Дата платежа': '2021-05-15',
+                'Категория': 'Супермаркеты',
+                'Сумма платежа': -800
+            },
+            {
+                'Дата платежа': '2021-05-15',
+                'Категория': 'Кафе',
+                'Сумма платежа': -1500
+            }
+        ]
+    )
+
+    result = spending_by_category(
+        transactions,
+        category='Кафе',
+        date='2021-07-08',
+    )
+
+    assert len(result) == 1
+    assert result.iloc[0]['Категория'] == 'Кафе'
