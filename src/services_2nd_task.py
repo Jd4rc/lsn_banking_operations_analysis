@@ -29,7 +29,6 @@ def profitable_cashback_categories(
 
     transactions['Дата платежа'] = pd.to_datetime(
         transactions['Дата платежа'],
-        dayfirst=True,
         errors='coerce',
     )
 
