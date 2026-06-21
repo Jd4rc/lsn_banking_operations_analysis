@@ -1,5 +1,6 @@
 from unittest.mock import patch, Mock
 
+import pytest
 import requests
 
 from src.services import get_top_transactions, get_cards_info, get_currency_rates
@@ -284,6 +285,13 @@ def test_get_currency_rates_skip_request_error(mock_get):
     result = get_currency_rates(['USD'])
 
     assert result == []
+
+
+@patch('src.services.EXCHANGE_RATES_API_KEY', None)
+def test_get_currency_rates_without_api_key():
+    with pytest.raises(ValueError, match='API_KEY not found'):
+        get_currency_rates(['USD'])
+
 
 
 
