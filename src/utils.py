@@ -4,9 +4,12 @@ from pathlib import Path
 import pandas as pd
 
 
+def get_greeting(date_time: str | None = None) -> str:
+    if date_time is None:
+        dt = datetime.now()
+    else:
+        dt = datetime.strptime(date_time, '%Y-%m-%d %H:%M:%S')
 
-def get_greeting(date_time: str) -> str:
-    dt = datetime.strptime(date_time, "%Y-%m-%d %H:%M:%S")
     hour = dt.hour
 
     if 5 <= hour < 12:
