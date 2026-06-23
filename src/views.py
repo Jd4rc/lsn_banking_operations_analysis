@@ -8,7 +8,7 @@ from src.services import get_stock_prices
 from src.utils import load_user_settings
 from src.utils import load_transactions
 
-def main() -> dict:
+def get_main_page() -> dict:
     settings = load_user_settings(SETTING_PATH)
 
     currencies = settings.get('user_currencies', [])
