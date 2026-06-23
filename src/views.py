@@ -1,21 +1,22 @@
-from src.config import SETTING_PATH
 from src.config import OPERATIONS_PATH
-from src.utils import get_greeting
+from src.config import SETTING_PATH
 from src.services import get_cards_info
-from src.services import get_top_transactions
 from src.services import get_currency_rates
 from src.services import get_stock_prices
-from src.utils import load_user_settings
+from src.services import get_top_transactions
+from src.utils import get_greeting
 from src.utils import load_transactions
+from src.utils import load_user_settings
+
 
 def get_main_page() -> dict:
     settings = load_user_settings(SETTING_PATH)
 
-    currencies = settings.get('user_currencies', [])
+    currencies = settings.get("user_currencies", [])
 
     operations = load_transactions(OPERATIONS_PATH)
 
-    stocks = settings.get('user_stocks', [])
+    stocks = settings.get("user_stocks", [])
 
     return {
         "greeting": get_greeting(),

@@ -19,6 +19,7 @@ from src.utils import get_greeting
 def test_get_greeting(date_time, expected):
     assert get_greeting(date_time) == expected
 
+
 def test_get_greeting_invalid_date():
     with pytest.raises(ValueError):
         get_greeting("16.06.2026")
