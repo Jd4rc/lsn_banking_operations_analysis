@@ -31,3 +31,28 @@ def load_transactions(file_path: Path) -> pd.DataFrame:
     if not file_path.exists():
         raise FileNotFoundError(f"Файл не найден {file_path}")
     return pd.read_excel(file_path)
+
+
+def filtered_operations_for_period(
+        operations: pd.DataFrame,
+        date_time: str | None = None,
+) -> pd.DataFrame:
+    if date_time is None:
+        date_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    end_date = pd.to_datetime(date_time)
+    start_date = end_date.replace(day=1, hour=0, minute=0, second=0)
+
+    data = operations.copy()
+
+    data['Дата платежа'] = pd.to_datetime(
+        data['Дата платежа'],
+        errors='coerce',
+        dayfirst=True
+    )
+
+    return data[
+        (data['Дата платежа'] >= start_date)
+        &
+        (data['Дата платежа'] <= end_date)
+    ]
