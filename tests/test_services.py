@@ -1,10 +1,15 @@
-from unittest.mock import patch, Mock
+from unittest.mock import Mock
+from unittest.mock import patch
 
 import pandas as pd
 import pytest
 import requests
 
-from src.services import get_top_transactions, get_cards_info, get_currency_rates, get_stock_prices
+from src.services import get_cards_info
+from src.services import get_currency_rates
+from src.services import get_stock_prices
+from src.services import get_top_transactions
+
 
 def test_get_top_transactions():
     operations = pd.DataFrame(
@@ -53,6 +58,7 @@ def test_get_top_transactions():
         },
     ]
 
+
 def test_get_top_transactions_returns_only_five_items():
     operations = pd.DataFrame(
         [
@@ -74,26 +80,23 @@ def test_get_top_transactions_returns_only_five_items():
 
 
 def test_get_cards_info_single_card():
-    operations = pd.DataFrame([
-        {
-            "Номер карты": "*4052",
-            "Сумма платежа": -1000,
-        },
-        {
-            "Номер карты": "*4052",
-            "Сумма платежа": -500,
-        },
-    ])
+    operations = pd.DataFrame(
+        [
+            {
+                "Номер карты": "*4052",
+                "Сумма платежа": -1000,
+            },
+            {
+                "Номер карты": "*4052",
+                "Сумма платежа": -500,
+            },
+        ]
+    )
 
     result = get_cards_info(operations)
 
-    assert result == [
-        {
-            'last_digits': '4052',
-            'total_spent': 1500,
-            'cashback': 15.0
-        }
-    ]
+    assert result == [{"last_digits": "4052", "total_spent": 1500, "cashback": 15.0}]
+
 
 def test_get_card_info(operations):
     result = get_cards_info(operations)
@@ -111,17 +114,12 @@ def test_get_card_info(operations):
         },
     ]
 
+
 def test_get_cards_info_with_multiple_cards():
     operations = pd.DataFrame(
         [
-            {
-                "Номер карты": "*5678",
-                "Сумма платежа": -1500
-            },
-            {
-                "Номер карты": "*9178",
-                "Сумма платежа": -98
-            }
+            {"Номер карты": "*5678", "Сумма платежа": -1500},
+            {"Номер карты": "*9178", "Сумма платежа": -98},
         ]
     )
 
@@ -137,8 +135,9 @@ def test_get_cards_info_with_multiple_cards():
             "last_digits": "9178",
             "total_spent": 98.0,
             "cashback": 0.98,
-        }
+        },
     ]
+
 
 def test_get_cards_info_with_sum_operations():
     operations = pd.DataFrame(
@@ -183,6 +182,7 @@ def test_get_cards_info_ignore_positive_amounts():
 
     assert result == []
 
+
 def test_get_cards_info_with_missing_card():
     operations = pd.DataFrame(
         [
@@ -212,7 +212,6 @@ def test_get_cards_info_with_rounding():
 
     result = get_cards_info(operations)
 
-
     assert result == [
         {
             "last_digits": "3456",
@@ -220,47 +219,44 @@ def test_get_cards_info_with_rounding():
             "cashback": 12.35,
         },
     ]
-@patch('src.services.EXCHANGE_RATES_API_KEY', 'test_api_key')
-@patch('src.services.requests.get')
+
+
+@patch("src.services.EXCHANGE_RATES_API_KEY", "test_api_key")
+@patch("src.services.requests.get")
 def test_get_currency_rates_success(mock_get):
 
     mock_response = mock_get.return_value
-    mock_response.json.return_value = {
-        'result': 91.2345
-    }
+    mock_response.json.return_value = {"result": 91.2345}
     mock_response.raise_for_status.return_value = None
 
-    result = get_currency_rates(['USD'])
+    result = get_currency_rates(["USD"])
 
-    assert result == [{'currency': 'USD', 'rate': 91.23}]
+    assert result == [{"currency": "USD", "rate": 91.23}]
 
     mock_get.assert_called_once_with(
         "https://api.apilayer.com/exchangerates_data/convert",
         params={
-            'from': 'USD',
-            'to': 'RUB',
-            'amount': 1,
+            "from": "USD",
+            "to": "RUB",
+            "amount": 1,
         },
         headers={
-            "apikey": 'test_api_key',
+            "apikey": "test_api_key",
         },
-        timeout=10
+        timeout=10,
     )
 
-@patch('src.services.EXCHANGE_RATES_API_KEY', 'test_api_key')
-@patch('src.services.requests.get')
+
+@patch("src.services.EXCHANGE_RATES_API_KEY", "test_api_key")
+@patch("src.services.requests.get")
 def test_get_currency_rates_multiple_currencies(mock_get):
 
     mock_response_usd = Mock()
-    mock_response_usd.json.return_value = {
-        'result': 91.2345
-    }
+    mock_response_usd.json.return_value = {"result": 91.2345}
     mock_response_usd.raise_for_status.return_value = None
 
     mock_response_eur = Mock()
-    mock_response_eur.json.return_value = {
-        'result': 87.8270
-    }
+    mock_response_eur.json.return_value = {"result": 87.8270}
     mock_response_eur.raise_for_status.return_value = None
 
     mock_get.side_effect = [
@@ -268,48 +264,47 @@ def test_get_currency_rates_multiple_currencies(mock_get):
         mock_response_eur,
     ]
 
-    result = get_currency_rates(['USD', 'EUR'])
+    result = get_currency_rates(["USD", "EUR"])
 
     assert result == [
-        {'currency': 'USD', 'rate': 91.23},
-        {'currency': 'EUR', 'rate': 87.83},
+        {"currency": "USD", "rate": 91.23},
+        {"currency": "EUR", "rate": 87.83},
     ]
 
-@patch('src.services.EXCHANGE_RATES_API_KEY', 'test_api_key')
-@patch('src.services.requests.get')
+
+@patch("src.services.EXCHANGE_RATES_API_KEY", "test_api_key")
+@patch("src.services.requests.get")
 def test_get_currency_rates_skip_none_rate(mock_get):
 
     mock_response_usd = Mock()
-    mock_response_usd.json.return_value = {
-        'result': None
-    }
+    mock_response_usd.json.return_value = {"result": None}
     mock_response_usd.raise_for_status.return_value = None
 
     mock_get.side_effect = [
         mock_response_usd,
     ]
 
-    result = get_currency_rates(['USD'])
+    result = get_currency_rates(["USD"])
 
     assert result == []
 
 
-@patch('src.services.EXCHANGE_RATES_API_KEY', 'test_api_key')
-@patch('src.services.requests.get', side_effect=requests.RequestException())
+@patch("src.services.EXCHANGE_RATES_API_KEY", "test_api_key")
+@patch("src.services.requests.get", side_effect=requests.RequestException())
 def test_get_currency_rates_skip_request_error(mock_get):
-    result = get_currency_rates(['USD'])
+    result = get_currency_rates(["USD"])
 
     assert result == []
 
 
-@patch('src.services.EXCHANGE_RATES_API_KEY', None)
+@patch("src.services.EXCHANGE_RATES_API_KEY", None)
 def test_get_currency_rates_without_api_key():
-    with pytest.raises(ValueError, match='API_KEY not found'):
-        get_currency_rates(['USD'])
+    with pytest.raises(ValueError, match="API_KEY not found"):
+        get_currency_rates(["USD"])
 
 
-@patch('src.services.ALPHA_VANTAGE_API_KEY', 'test_api_key')
-@patch('src.services.requests.get')
+@patch("src.services.ALPHA_VANTAGE_API_KEY", "test_api_key")
+@patch("src.services.requests.get")
 def test_get_stock_prices(mock_get):
     mock_response = mock_get.return_value
     mock_response.json.return_value = {
@@ -320,28 +315,23 @@ def test_get_stock_prices(mock_get):
     }
     mock_response.raise_for_status.return_value = None
 
-    result = get_stock_prices(['AAPL'])
+    result = get_stock_prices(["AAPL"])
 
-    assert result == [
-        {
-            'stock': 'AAPL',
-            'price': 213.46
-        }
-    ]
+    assert result == [{"stock": "AAPL", "price": 213.46}]
 
     mock_get.assert_called_once_with(
-        'https://www.alphavantage.co/query',
+        "https://www.alphavantage.co/query",
         params={
-            'function': 'GLOBAL_QUOTE',
-            'symbol': 'AAPL',
-            'apikey': 'test_api_key',
+            "function": "GLOBAL_QUOTE",
+            "symbol": "AAPL",
+            "apikey": "test_api_key",
         },
-        timeout=10
+        timeout=10,
     )
 
 
-@patch('src.services.ALPHA_VANTAGE_API_KEY', 'test_api_key')
-@patch('src.services.requests.get')
+@patch("src.services.ALPHA_VANTAGE_API_KEY", "test_api_key")
+@patch("src.services.requests.get")
 def test_get_stock_prices_with_multiple_stocks(mock_get):
     mock_response_aapl = Mock()
     mock_response_aapl.json.return_value = {
@@ -363,22 +353,16 @@ def test_get_stock_prices_with_multiple_stocks(mock_get):
 
     mock_get.side_effect = [mock_response_aapl, mock_response_msft]
 
-    result = get_stock_prices(['AAPL',  'MSFT'])
+    result = get_stock_prices(["AAPL", "MSFT"])
 
     assert result == [
-        {
-            'stock': 'AAPL',
-            'price': 213.46
-        },
-        {
-            'stock': 'MSFT',
-            'price': 513.0
-        }
+        {"stock": "AAPL", "price": 213.46},
+        {"stock": "MSFT", "price": 513.0},
     ]
 
 
-@patch('src.services.ALPHA_VANTAGE_API_KEY', 'test_api_key')
-@patch('src.services.requests.get')
+@patch("src.services.ALPHA_VANTAGE_API_KEY", "test_api_key")
+@patch("src.services.requests.get")
 def test_get_stock_prices_if_price_is_none(mock_get):
     mock_response = mock_get.return_value
     mock_response.json.return_value = {
@@ -389,15 +373,16 @@ def test_get_stock_prices_if_price_is_none(mock_get):
     }
     mock_response.raise_for_status.return_value = None
 
-    result = get_stock_prices(['AAPL'])
+    result = get_stock_prices(["AAPL"])
 
     assert result == []
 
-@patch('src.services.ALPHA_VANTAGE_API_KEY', 'test_api_key')
-@patch('src.services.requests.get')
+
+@patch("src.services.ALPHA_VANTAGE_API_KEY", "test_api_key")
+@patch("src.services.requests.get")
 def test_get_stock_prices_skip_request_error(mock_get):
     mock_get.side_effect = requests.RequestException()
 
-    result = get_stock_prices(['AAPL'])
+    result = get_stock_prices(["AAPL"])
 
     assert result == []

@@ -28,3 +28,6 @@ dev = [
     "isort (>=8.0.1,<9.0.0)",
     "mypy (>=2.1.0,<3.0.0)"
 ]
+
+[tool.isort]
+force_single_line = true
