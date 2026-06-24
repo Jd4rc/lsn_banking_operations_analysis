@@ -34,8 +34,8 @@ def load_transactions(file_path: Path) -> pd.DataFrame:
 
 
 def filtered_operations_for_period(
-        operations: pd.DataFrame,
-        date_time: str | None = None,
+    operations: pd.DataFrame,
+    date_time: str | None = None,
 ) -> pd.DataFrame:
     if date_time is None:
         date_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -45,14 +45,10 @@ def filtered_operations_for_period(
 
     data = operations.copy()
 
-    data['Дата платежа'] = pd.to_datetime(
-        data['Дата платежа'],
-        errors='coerce',
-        dayfirst=True
+    data["Дата платежа"] = pd.to_datetime(
+        data["Дата платежа"], errors="coerce", dayfirst=True
     )
 
     return data[
-        (data['Дата платежа'] >= start_date)
-        &
-        (data['Дата платежа'] <= end_date)
+        (data["Дата платежа"] >= start_date) & (data["Дата платежа"] <= end_date)
     ]
