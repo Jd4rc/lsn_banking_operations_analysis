@@ -20,7 +20,14 @@ def get_greeting() -> str:
 
 def load_user_settings(file_path: Path) -> dict:
     with open(file_path) as file:
-        return json.load(file)
+        data = json.load(file)
+
+    if not isinstance(data, dict):
+        raise ValueError('Settings file must contain a JSON object')
+
+    return data
+
+
 
 
 def load_transactions(file_path: Path) -> pd.DataFrame:
@@ -39,10 +46,6 @@ def filtered_operations_for_period(
 
     data = operations.copy()
 
-    data["Дата платежа"] = pd.to_datetime(
-        data["Дата платежа"], errors="coerce", dayfirst=True
-    )
+    data["Дата платежа"] = pd.to_datetime(data["Дата платежа"], errors="coerce", dayfirst=True)
 
-    return data[
-        (data["Дата платежа"] >= start_date) & (data["Дата платежа"] <= end_date)
-    ]
+    return data[(data["Дата платежа"] >= start_date) & (data["Дата платежа"] <= end_date)]

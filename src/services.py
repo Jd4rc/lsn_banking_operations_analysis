@@ -125,7 +125,7 @@ def get_currency_rates(currencies: list[str]) -> list[dict]:
     for currency in currencies:
         url = "https://api.apilayer.com/exchangerates_data/convert"
 
-        params: dict[str, str | int | float]  = {"from": currency, "to": "RUB", "amount": 1}
+        params: dict[str, str | int | float] = {"from": currency, "to": "RUB", "amount": 1}
 
         headers = {
             "apikey": EXCHANGE_RATES_API_KEY,

@@ -24,16 +24,12 @@ def report_to_file(
             output_filename = filename
 
             if output_filename is None:
-                output_filename = (
-                    f'{func.__name__}_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
-                )
+                output_filename = f'{func.__name__}_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
 
             output_path = Path(output_filename)
 
             if isinstance(result, pd.DataFrame):
-                result.to_json(
-                    output_path, orient="records", force_ascii=False, indent=4
-                )
+                result.to_json(output_path, orient="records", force_ascii=False, indent=4)
             else:
                 output_path.write_text(
                     str(result),
@@ -48,9 +44,7 @@ def report_to_file(
 
 
 @report_to_file()
-def spending_by_category(
-    transactions: pd.DataFrame, category: str, date: Optional[str] = None
-):
+def spending_by_category(transactions: pd.DataFrame, category: str, date: Optional[str] = None):
     """""
     Возвращает траты по заданной категории за последниео три месяца.
 
