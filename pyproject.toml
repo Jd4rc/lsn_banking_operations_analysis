@@ -28,3 +28,19 @@ dev = [
     "isort (>=8.0.1,<9.0.0)",
     "mypy (>=2.1.0,<3.0.0)"
 ]
+
+[tool.black]
+line-length = 119
+
+[tool.isort]
+profile = "black"
+line_length = 119
+force_single_line = true
+
+[tool.flake8]
+max-line-length = 119
+
+[tool.mypy]
+no_implicit_optional = true
+warn_return_any = true
+exclude = 'venv'

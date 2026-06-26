@@ -1,6 +1,7 @@
 import pandas as pd
 import pytest
 
+
 @pytest.fixture
 def operations():
     return pd.DataFrame(
